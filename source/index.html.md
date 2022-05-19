@@ -5,7 +5,6 @@ language_tabs:
   - http
 
 includes:
-  - authentication
   - checkout
   - card
   - debit
@@ -13,14 +12,16 @@ includes:
   - recurring
 ---
 
-# Введение 
+# Спецификация API
 
-## Спецификация API
+## Запросы и ответы
 
 API представляет собой HTTP-based RPC (remote procedure call). Название метода (процедуры) передается в URL. Каждый HTTP-запрос должен иметь метод `POST`. В качестве типа тела запроса используется JSON.
 
+
 Каждый HTTP ответ имеет статус `200 - OK`. В корне тела ответа есть поле `code`, которое показывает с каким статусом был завершен запрос. Со всеми кодами можно ознакомиться [ниже](/#f886d8017b).
 В теле неуспешного ответа есть поле `message`, которое дает небольшое описание об ошибке.
+
 
 > **Пример запроса**:
 ```
@@ -34,7 +35,6 @@ POST - /checkout.payment.create
     "exp": "1024"
 }
 ```
-
 
 > **Успешный ответ**:
 
@@ -51,7 +51,7 @@ POST - /checkout.payment.create
 
 ```json
 {
-    "code": 1003,
+    "code": 1002,
     "message": "unauthorized"
 }
 ```
@@ -72,8 +72,8 @@ POST - /checkout.payment.create
 
 ```json
 {
-    "page": 1,
-    "per_page": 3
+  "page": 1,
+  "per_page": 3
 }
 ```
 

@@ -1,11 +1,51 @@
 # Онлайн касса
+<aside class="notice">
+Сессии необходимы для проведения оплаты через онлайн-кассу, чтобы приложение (бекенд) мерчанта могло приватно и безопасно (без возможности редактирования конечным пользователем) передать сумму оплаты кассе.
+</aside>
 
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+Ссылки на страницы онлайн-кассы:<br>
+`https://checkout.dev.alif.cloud` - песочница<br>
+`https://checkout.alifpay.uz` - прод
+
+## Создание сессии
+Сессия — это "сеанс", в рамках которого должна быть проведена оплата. Сессия живет 5 часов, и в рамках одной сессии может быть проведен только один успешный платеж, после чего сессия закрывается. Для создании сессии нужно передать список с ценами, количествами и названиями товаров. Переданная информация отобразится на странице онлайн-кассы. После создания сессии возвращается её идентификатор, с помощью которого можно перейти на страницу онлайн-кассы (`checkout.alifpay.uz?session_ref=<идентификатор>`).
+
+Общая сумма высчитывается умножением цены товара (`price`) на его количество (`amount`) и суммированием полученных результатов каждого товара.
+
+
+> Допустим пользователь хочет купить 3 яблока стоимостью 3000 каждое, тогда запрос должен выглядеть так:
 
 ```json
 {
-    "msg": "sup"
+    "items": [
+        {
+            "name": "apple",
+            "price": 3000,
+            "amount": 3
+        }
+    ],
+    "webhook_url": "<https://alifshop.uz/webhook>",
+    "redirect_url": "<https://alifshop.uz/purchase?id=123>",
+    "meta": { "thebestone": "itachi" },
+    "epos": "aliftech"
 }
 ```
 
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+Описание запроса:
+
+| Ключ         | Описание                                                                                                                                                      |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| items        | список товаров, которые хочет купить пользователь                                                                                                             |
+| webhook_url  | URL, на который будет отправлен HTTP-запрос после успешного платежа, должен быть валидным URL, начинающимся на https://. Это необязательное поле              |
+| redirect_url | URL страницы, на которую будет совершен переход после успешного платежа, должен быть валидным URL, начинающимся на https://                                   |
+| cancel_url   | URL страницы, на которую пользователь вернётся, если решит прервать оплату (”Вернуться на сайт партнёра”); должен быть валидным URL, начинающимся на https:// |
+| meta         | поле, в котором можно записать любые метаданные, должен быть валидным JSON                                                                                    |
+| epos         | терминал, через который необходимо произвести списание с карты                                                                                                |
+
+Описание объекта Item:
+
+| Ключ   | Описание          |
+| ------ | ----------------- |
+| name   | название товара   |
+| price  | цена товара       |
+| amount | количество товара |
