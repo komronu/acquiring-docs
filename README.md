@@ -33,3 +33,10 @@ docker run --rm --name slate -v $(pwd)/build:/srv/slate/build -v $(pwd)/source:/
 
 This will create the `build/` folder (don't worry about committing this, it's part of the `.gitignore` file). You can now 
 deploy: 
+
+
+Run on Virtaul machine
+
+```
+docker run -d -p "127.0.0.1:4567:4567" --name slate -v $(pwd)/build:/srv/slate/build -v $(pwd)/source:/srv/slate/source slatedocs/slate
+
